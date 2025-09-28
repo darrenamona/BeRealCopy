@@ -1,6 +1,6 @@
 # BeReal Clone
 
-A fully functional React Native application that replicates the core functionality of BeReal with local data storage, built using Expo and AsyncStorage. Experience the authentic BeReal social media experience with dual-camera posts, friends system, and 24-hour post expiration - all running locally on your device!
+A fully functional React Native application that replicates the core functionality of BeReal with local data storage, built using Expo and AsyncStorage. Incorporates dual-camera posts, friends system, and 24-hour post expiration running locally on your device.
 
 ## 🚀 Super Simple Setup (1 Command)
 
