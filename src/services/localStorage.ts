@@ -183,12 +183,19 @@ export const storageService = {
     const friendIds = friends.map(friend => 
       friend.requesterId === userId ? friend.recipientId : friend.requesterId
     );
-    // Include user's own posts and friends' posts, but only non-expired ones
-    const now = new Date();
-    return posts.filter(post => 
-      (post.authorId === userId || friendIds.includes(post.authorId)) &&
-      post.expiresAt > now
-    );
+    
+    // Filter to same calendar day only
+    const today = new Date();
+    const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const todayEnd = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+    
+    return posts.filter(post => {
+      const postDate = new Date(post.createdAt);
+      const isFromToday = postDate >= todayStart && postDate < todayEnd;
+      const isFromUserOrFriend = post.authorId === userId || friendIds.includes(post.authorId);
+      
+      return isFromToday && isFromUserOrFriend;
+    });
   },
 
   async getUserMemories(userId: string): Promise<Post[]> {
@@ -281,6 +288,12 @@ export const storageService = {
   async rejectFriendRequest(requestId: string): Promise<void> {
     const friends = await this.getAllFriends();
     const filteredFriends = friends.filter(friend => friend.id !== requestId);
+    await AsyncStorage.setItem('friends', JSON.stringify(filteredFriends));
+  },
+
+  async removeFriend(friendId: string): Promise<void> {
+    const friends = await this.getAllFriends();
+    const filteredFriends = friends.filter(friend => friend.id !== friendId);
     await AsyncStorage.setItem('friends', JSON.stringify(filteredFriends));
   },
 

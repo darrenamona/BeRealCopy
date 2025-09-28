@@ -163,9 +163,9 @@ const FriendsScreen: React.FC = () => {
 
   const removeFriend = async (friendId: string) => {
     try {
-      // For demo purposes, just remove from local list
-      setFriends(prev => prev.filter(friend => friend.id !== friendId));
+      await storageService.removeFriend(friendId);
       Alert.alert('Success', 'Friend removed');
+      loadData();
     } catch (error) {
       console.error('Error removing friend:', error);
       Alert.alert('Error', 'Failed to remove friend');

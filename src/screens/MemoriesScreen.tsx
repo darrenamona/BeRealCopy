@@ -24,22 +24,23 @@ const MemoryItem: React.FC<MemoryItemProps> = ({ post, onImagePress }) => {
   const formatDate = (timestamp: Date) => {
     const date = new Date(timestamp);
     const now = new Date();
-    const diffInDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+    
+    // Set both dates to start of day for accurate day comparison
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const postDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const diffInDays = Math.floor((today.getTime() - postDate.getTime()) / (1000 * 60 * 60 * 24));
     
     if (diffInDays === 0) {
       return 'Today';
     } else if (diffInDays === 1) {
       return 'Yesterday';
-    } else if (diffInDays < 7) {
-      return `${diffInDays} days ago`;
-    } else if (diffInDays < 30) {
-      const weeks = Math.floor(diffInDays / 7);
-      return `${weeks} week${weeks > 1 ? 's' : ''} ago`;
-    } else if (diffInDays < 365) {
-      const months = Math.floor(diffInDays / 30);
-      return `${months} month${months > 1 ? 's' : ''} ago`;
     } else {
-      return date.toLocaleDateString();
+      // For all other dates, show in MM/DD/YYYY format
+      return date.toLocaleDateString('en-US', {
+        month: '2-digit',
+        day: '2-digit',
+        year: 'numeric'
+      });
     }
   };
 
